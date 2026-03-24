@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Manmeet! ✨</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff85a1;
+            --bg: #ffe5ec;
+            --text: #590d22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Ambient Animated Background */
+        .bg-circles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .circle {
+            position: absolute;
+            background: rgba(255, 77, 109, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.1);
+            }
+        }
+
+        /* Container & Cards */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography & UI Elements */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        }
+
+        /* Game & Gift Mechanics */
+        .quiz-box {
+            background: #fdf0f4;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid var(--secondary);
+            padding: 0.8rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .option-btn.correct {
+            background: #2ec4b6;
+            color: white;
+            border-color: #2ec4b6;
+        }
+
+        .option-btn.wrong {
+            background: #e71d36;
+            color: white;
+            border-color: #e71d36;
+        }
+
+        /* Animated Gift Box */
+        .gift-box {
+            font-size: 5rem;
+            cursor: pointer;
+            animation: wobble 1s infinite;
+            margin: 2rem 0;
+            display: inline-block;
+        }
+
+        @keyframes wobble {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-10deg);
+            }
+
+            75% {
+                transform: rotate(10deg);
+            }
+        }
+
+        .hidden-message {
+            background: #fdf0f4;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            display: none;
+            border-left: 5px solid var(--primary);
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-circles">
+        <div class="circle" style="width: 100px; height: 100px; top: 10%; left: 5%;"></div>
+        <div class="circle" style="width: 150px; height: 150px; top: 70%; left: 80%;"></div>
+        <div class="circle" style="width: 80px; height: 80px; top: 40%; left: 85%;"></div>
+    </div>
+
+    <div class="container">
+
+        <div class="screen active" id="screen-home">
+            <h1>Hey Manmeet!</h1>
+            <p>Welcome to your personal, digital birthday universe! I've built some fun challenges and secrets here just
+                for you. Ready?</p>
+            <button class="btn" onclick="nextScreen('screen-quiz')">Start the Party! 🎉</button>
+        </div>
+
+        <div class="screen" id="screen-quiz">
+            <h2>🕵️‍♀️ The Challenge!</h2>
+            <p>Prove you are the real Manmeet Kaur! What is our favorite thing to do/eat together?</p>
+
+            <div class="quiz-box">
+                <div class="quiz-options">
+                    <button class="option-btn" onclick="checkAnswer(this, false)">Studying for hours 📚</button>
+                    <button class="option-btn" onclick="checkAnswer(this, true)">Laughing at stupid memes & eating
+                        🍕</button>
+                    <button class="option-btn" onclick="checkAnswer(this, false)">Waking up early ⏰</button>
+                </div>
+            </div>
+            <p id="quiz-feedback"></p>
+            <button class="btn" style="display:none;" id="quiz-next-btn" onclick="nextScreen('screen-gift')">Unlock
+                Gift! 🎁</button>
+        </div>
+
+        <div class="screen" id="screen-gift">
+            <h2>Tap the Gift Box! 🎁</h2>
+            <p>You survived the challenge! Now tap your present to see your message.</p>
+
+            <div class="gift-box" id="gift" onclick="openGift()">🎁</div>
+
+            <div id="surprise-message" class="hidden-message">
+                <h3>Happy Birthday, Manmeet! 💖</h3>
+                <p>May this year bring you endless smiles, success, and amazing food! Thank you for being such an
+                    awesome friend. Let's make this year unforgettable! ✨</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Screen Navigation Function
+        function nextScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            if (screenId === 'screen-quiz') {
+                triggerConfetti(0.2); // Light confetti on transition
+            }
+        }
+
+        // Quiz Logic
+        function checkAnswer(button, isCorrect) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true); // Disable all after selection
+
+            const feedback = document.getElementById('quiz-feedback');
+            const nextBtn = document.getElementById('quiz-next-btn');
+
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.innerHTML = "🎉 Correct! I knew you'd get it!";
+                triggerConfetti(0.7); // Big confetti for win!
+                nextBtn.style.display = "inline-block";
+            } else {
+                button.classList.add('wrong');
+                feedback.innerHTML = "😅 Hmm, are you sure? Try again!";
+                setTimeout(() => {
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('wrong');
+                    });
+                    feedback.innerHTML = "";
+                }, 1500);
+            }
+        }
+
+        // Open Gift Logic
+        function openGift() {
+            const gift = document.getElementById('gift');
+            gift.innerHTML = "🔓🎉";
+            gift.style.animation = "none";
+
+            document.getElementById('surprise-message').style.display = "block";
+
+            // Continuous confetti spray
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Reusable confetti trigger
+        function triggerConfetti(scalarValue) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                scalar: scalarValue
+            });
+        }
+    </script>
+</body>
+
+</html>
